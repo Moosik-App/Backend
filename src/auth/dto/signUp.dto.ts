@@ -4,3 +4,4 @@ export class signUpDto {
     perm: number;
     password: string;
 }
+
