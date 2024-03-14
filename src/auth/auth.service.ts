@@ -17,13 +17,18 @@ export class AuthService {
         const hashedPass = await argon2.hash(r.password);
         const uuid = crypto.randomUUID();
 
-        const user = dbClass.db.insert(users).values({
+        await dbClass.db.insert(users).values({
             uuid: uuid,
             username: r.username,
             password: hashedPass,
-        })
+        }).returning();
 
-        return 
+        const tokens = await this.getTokens(uuid, 0)
+
+        return {
+            refresh_token: tokens.refresh_token,
+            access_token: tokens.access_token
+        }
     }
 
     async getTokens(uuid: string, perms: number): Promise<Tokens> {

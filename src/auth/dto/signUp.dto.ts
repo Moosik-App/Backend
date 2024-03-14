@@ -1,7 +1,5 @@
-export class signUpDto {
-    uuid: string;
+export default class signUpDto {
     username: string;
-    perm: number;
     password: string;
 }
 

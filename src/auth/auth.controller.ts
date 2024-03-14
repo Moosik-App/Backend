@@ -5,6 +5,8 @@ import { RtGuard } from 'src/common/guards/rt.guard';
 import { Tokens } from 'src/types';
 import signUpDto from './dto/signUp.dto';
 import signInDto from './dto/signIn.dto';
+import { getCurrentUserUUID } from 'src/common/decorators/uuid.decorator';
+import { GetCurrentUser } from 'src/common/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -34,8 +36,7 @@ export class AuthController {
   @UseGuards(RtGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  refreshTokens(uuid, rt): Promise<Tokens> {
+  refreshTokens(@getCurrentUserUUID() uuid: string, @GetCurrentUser('refreshToken') rt: string): Promise<Tokens> {
     return this.authService.refreshTokens(uuid, rt);
   }
 }
-
