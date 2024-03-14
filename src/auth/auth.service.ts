@@ -7,6 +7,7 @@ import { users } from 'src/utils/schema';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './types';
 import { eq } from 'drizzle-orm';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -15,15 +16,17 @@ export class AuthService {
         ) {}
     async signUp(r: signUpDto): Promise<Tokens> {
         const hashedPass = await argon2.hash(r.password);
-        const uuid = crypto.randomUUID();
+        const uuid = randomUUID();
 
         await dbClass.db.insert(users).values({
             uuid: uuid,
             username: r.username,
             password: hashedPass,
-        }).returning();
+        });
 
-        const tokens = await this.getTokens(uuid, 0)
+        
+        const tokens = await this.getTokens(uuid, 0);
+        await this.updateRtHash(uuid, tokens.refresh_token);
 
         return {
             refresh_token: tokens.refresh_token,
@@ -63,7 +66,7 @@ export class AuthService {
         const user = await dbClass.db.query.users.findFirst({
             where: eq(users.uuid, uuid)
         });
-
+        console.log(uuid, rt)
         if (!user || !user.hashedRt ) throw new ForbiddenException('Access Denied');
 
         const rtMatch = await argon2.verify(user.hashedRt, rt);
