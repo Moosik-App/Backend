@@ -57,6 +57,20 @@ export class AuthService {
         }
     }    
 
+    async logout(uuid: string): Promise<boolean> {
+        if(!uuid) throw new ForbiddenException('Bad Request');
+
+        const user = await dbClass.db.query.users.findFirst({
+            where: eq(users.uuid, uuid)
+        });
+
+        if( !user || !user.hashedRt) throw new ForbiddenException('Access Denied');
+
+        await dbClass.db.update(users).set({hashedRt: null}).where(eq(users.uuid, uuid));
+
+        return;
+    }
+
     async updateRtHash(uuid: string, rt: string): Promise<void> {
         const hash = await argon2.hash(rt);
         await dbClass.db.update(users).set({hashedRt: hash}).where(eq(users.uuid, uuid));
@@ -66,7 +80,6 @@ export class AuthService {
         const user = await dbClass.db.query.users.findFirst({
             where: eq(users.uuid, uuid)
         });
-        console.log(uuid, rt)
         if (!user || !user.hashedRt ) throw new ForbiddenException('Access Denied');
 
         const rtMatch = await argon2.verify(user.hashedRt, rt);

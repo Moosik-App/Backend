@@ -28,8 +28,8 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(uuid: string): Promise<boolean> {
-   return
+  logout(@getCurrentUserUUID() uuid: string): Promise<boolean> {
+    return this.authService.logout(uuid);
   };
 
   @Public()
