@@ -6,6 +6,7 @@ import { Tokens } from 'src/types';
 import { getCurrentUserUUID } from 'src/common/decorators/uuid.decorator';
 import { GetCurrentUser } from 'src/common/decorators/user.decorator';
 import signUpDto from './dto/signUp.dto';
+import signInDto from './dto/signIn.dto';
 
 
 @Controller('auth')
@@ -22,11 +23,12 @@ export class AuthController {
   @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@getCurrentUserUUID() uuid: string): Promise<Tokens> {
-    return
+  signinLocal(@Body() r: signInDto): Promise<Tokens> {
+    return this.authService.signIn(r);
   };
 
   @Post('logout')
+  @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   logout(@getCurrentUserUUID() uuid: string): Promise<boolean> {
     return this.authService.logout(uuid);
