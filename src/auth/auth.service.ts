@@ -1,5 +1,5 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Tokens } from 'src/types';
 import { users } from 'src/utils/schema';
 import { JwtService } from '@nestjs/jwt';
