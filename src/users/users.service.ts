@@ -37,4 +37,8 @@ export class UsersService {
         return user;
     }
 
+    async updateUser(username: string): Promise<boolean> {
+        return true;
+    }
+
 }
