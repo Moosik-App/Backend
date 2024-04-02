@@ -6,7 +6,6 @@ import { getCurrentUserUUID } from 'src/common/decorators/uuid.decorator';
 import { PermsGuard } from 'src/common/guards/perm.guard';
 import { Perms } from 'src/common/decorators/perms.decorator';
 import { PermsEnum } from 'src/utils/perms';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {

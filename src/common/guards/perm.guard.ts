@@ -37,7 +37,6 @@ export class PermsGuard extends AtGuard {
         }
     
         // User does not have required permissions
-        console.log(`Required Permission: ${requiredPerms} \nCurrent User's Permission: ${req.user.perms}`);
-        return false;
+      return false;
     }
 };
